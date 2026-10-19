@@ -3,4 +3,4 @@ title: "Hello world"
 description: "Страница в разработке"
 ---
 
-Hello
+Hello, world.

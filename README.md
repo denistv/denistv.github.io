@@ -1,7 +1,7 @@
 # denistv.com
 
-Персональный сайт Дениса Твердохлебова на Hugo. Публикуется на GitHub Pages
-из репозитория `denistv/denistv.github.io` через GitHub Actions.
+Сайт на Hugo. Публикуется на GitHub Pages из репозитория
+`denistv/denistv.github.io` через GitHub Actions.
 
 ## Локально
 
@@ -16,7 +16,7 @@ Hugo 0.168.0 (extended). `public/` в git не коммитится.
 
 ```
 hugo.toml                      конфигурация, baseURL = https://denistv.com/
-content/_index.md              главная страница (CV)
+content/_index.md              главная страница
 layouts/baseof.html            каркас документа
 layouts/index.html             главная
 layouts/_default/single.html   обычные страницы
