@@ -1,44 +1,186 @@
-# denistv.com
+# Сайт на Hugo
 
-Сайт на Hugo. Публикуется на GitHub Pages из репозитория
-`denistv/denistv.github.io` через GitHub Actions.
+Статический сайт на [Hugo](https://gohugo.io/) без внешней темы: свои шаблоны,
+свой CSS. Собирается в GitHub Actions и публикуется на GitHub Pages по адресу
+`https://denistv.com/`.
 
-## Локально
+## Требования
+
+- Hugo **extended** 0.168.0 — та же версия зафиксирована в
+  `.github/workflows/pages.yml` (`env.HUGO_VERSION`). Локальная и CI-версии должны
+  совпадать, иначе шаблон может собраться локально и упасть в CI.
+- git и доступ к `git@github.com:denistv/denistv.github.io.git` по SSH.
+
+Установка на macOS:
 
 ```bash
-hugo server -D          # http://localhost:1313, черновики включены
-hugo --minify --gc      # сборка в public/
+brew install hugo
+hugo version   # ожидаемо: hugo v0.168.0+extended
 ```
 
-Hugo 0.168.0 (extended). `public/` в git не коммитится.
+## Быстрый старт
+
+```bash
+hugo server -D            # http://localhost:1313, включая черновики
+hugo server               # без черновиков, как на проде
+hugo --minify --gc        # разовая сборка в public/
+```
+
+`hugo server` пересобирает страницу при сохранении файлов. Если правка не видна —
+проверьте, что сервер запущен из корня репозитория.
 
 ## Структура
 
 ```
-hugo.toml                      конфигурация, baseURL = https://denistv.com/
+hugo.toml                      конфигурация: baseURL, язык, параметры сайта
 content/_index.md              главная страница
-layouts/baseof.html            каркас документа
-layouts/index.html             главная
-layouts/_default/single.html   обычные страницы
-static/css/style.css           стили, тёмная тема и print
-static/favicon.svg             иконка
-.github/workflows/pages.yml    сборка и деплой
+content/*.md                   остальные страницы
+layouts/baseof.html            каркас HTML: head, шапка, main, футер
+layouts/index.html             шаблон главной
+layouts/_default/single.html   шаблон обычной страницы
+static/css/style.css           стили: тёмная тема, мобильная вёрстка, print
+static/favicon.svg             иконка сайта
+static/                        всё отсюда публикуется в корень сайта
+.github/workflows/pages.yml    сборка и деплой на Pages
+CNAME                          домен для Pages
 ```
+
+Важно: `static/css/style.css` попадает на сайт как `/css/style.css`. Файлы из
+корня репозитория (кроме `static/`) на сайт не копируются.
+
+## Контент
+
+Главная — `content/_index.md`. Front matter в формате YAML:
+
+```yaml
+---
+title: "Заголовок страницы"
+description: "Описание для meta description"
+draft: true          # черновик: не попадёт в сборку без -D
+---
+```
+
+Тело — обычный Markdown: заголовки `##`/`###`, списки, ссылки, таблицы.
+Заголовок `title` выводится шаблоном, поэтому `# H1` в теле не нужен — иначе
+заголовок продублируется.
+
+Новая страница — просто новый файл:
+
+```bash
+content/about.md   →  /about/
+```
+
+Черновики видны только в `hugo server -D`. Перед пушем черновик либо заполняется,
+либо получает `draft: false`.
+
+Картинки кладите в `static/` (например `static/photo.jpg`) и ссылайтесь как
+`/photo.jpg`. Указывайте `alt` и сжимайте файлы — репозиторий публичный.
+
+## Шаблоны
+
+`layouts/baseof.html` — общий каркас, страницы подставляют содержимое в блок:
+
+```go-html-template
+{{ define "main" }}
+  <article class="page">
+    {{ .Content }}
+  </article>
+{{ end }}
+```
+
+Что используется:
+
+- `{{ .Content }}` — отрендеренный Markdown страницы;
+- `{{ .Title }}`, `{{ .Description }}`, `{{ .Permalink }}` — данные страницы;
+- `{{ site.Title }}`, `{{ site.Params.* }}` — данные из `hugo.toml`;
+- `{{ "css/style.css" | relURL }}` — ссылка, работающая и на домене, и на
+  `github.io`, и локально.
+
+Если нужен повторяющийся фрагмент — `layouts/partials/name.html` и вызов
+`{{ partial "name.html" . }}`.
+
+## Стили
+
+Один файл `static/css/style.css`, без препроцессоров и внешних шрифтов
+(системный стек шрифтов). Цвета — CSS-переменные в `:root`, тёмная тема
+включается через `@media (prefers-color-scheme: dark)`.
+
+При правках проверяйте три режима:
+
+1. узкий экран (≤ 30rem);
+2. тёмная тема;
+3. печать: `Cmd+P` в браузере — ссылки должны быть читаемы, разрывы страниц
+   не должны рвать блоки.
+
+## Сборка
+
+```bash
+hugo --minify --gc
+```
+
+- `--minify` — минификация HTML/CSS/JS;
+- `--gc` — очистка неиспользуемого кеша ресурсов.
+
+Результат — в `public/`. Каталог в `.gitignore` и **не коммитится**: артефакт
+создаёт CI.
 
 ## Публикация
 
-1. Пуш в `main` запускает `.github/workflows/pages.yml`.
-2. Source в Settings → Pages — **GitHub Actions**.
-3. Домен `denistv.com` задан в Settings → Pages → Custom domain, файл `CNAME`
-   в репозитории не нужен.
+1. Коммит и пуш в `main`:
 
-## Домен
+   ```bash
+   git add -A
+   git commit -m "Обновить страницу"
+   git push
+   ```
 
-- `denistv.com` — четыре A-записи GitHub Pages:
+2. Запускается `.github/workflows/pages.yml`:
+   `checkout` → установка Hugo → `hugo --minify --gc` → `upload-pages-artifact` →
+   `deploy-pages`.
+3. Source в **Settings → Pages** должен быть **GitHub Actions**. Если стоит
+   `Deploy from a branch`, GitHub дополнительно собирает ветку Jekyll-ем и
+   перетирает результат Hugo.
+4. Custom domain — `denistv.com` (задан в настройках Pages). Файл `CNAME`
+   в репозитории для Actions-деплоя не обязателен.
+
+Ручной запуск без нового коммита: Actions → **Deploy Hugo site to Pages** →
+**Run workflow** (`workflow_dispatch`).
+
+## Домен и HTTPS
+
+- `denistv.com` (apex) — только четыре A-записи:
   `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`.
+  Лишние A/AAAA ломают выпуск сертификата.
 - `www.denistv.com` — CNAME на `denistv.github.io.`.
-- DNS живёт в репозитории `services` (плейбук `ansible/playbooks/dns`), из этого
-  репозитория не меняется.
+- DNS живёт в отдельном репозитории `services`; из этого репозитория не меняется.
+- TLS выпускает GitHub через Let's Encrypt автоматически. Свой сертификат
+  загрузить нельзя, `certbot` не нужен. После выпуска включается `Enforce HTTPS`.
 
-TLS-сертификат выпускает GitHub через Let's Encrypt автоматически после привязки
-домена к работающему сайту. Свой сертификат загрузить нельзя, `certbot` не нужен.
+Проверка:
+
+```bash
+echo | openssl s_client -connect denistv.com:443 -servername denistv.com 2>/dev/null \
+  | openssl x509 -noout -subject -dates -ext subjectAltName
+curl -I https://denistv.com/
+```
+
+## Диагностика
+
+| Симптом | Причина и что делать |
+|---|---|
+| Сборка падает на `Build` | смотреть лог шага; чаще всего синтаксис шаблона или front matter |
+| На сайте 404 после пуша | Pages не включён, или Source = `Deploy from a branch`, или деплой ещё идёт |
+| Правка не видна | кеш Pages `max-age=600`; открыть с `?v=1` или подождать 10 минут |
+| Ссылки ведут на `localhost` | в `hugo.toml` сломан `baseURL`; должен быть `https://denistv.com/` |
+| Ошибка сертификата | домен не привязан к сайту, или появились лишние A/AAAA |
+| `WARN deprecated` | обновить ключ конфига под текущую версию Hugo (например `languageCode` → `locale`) |
+
+`hugo --minify --gc` перед пушем ловит большинство проблем локально.
+
+## Правила
+
+- Не коммитить `public/` и не деплоить вручную поверх Actions.
+- Не менять `baseURL` без одновременной правки настроек Pages.
+- Не добавлять секреты, токены и лишние персональные данные — репозиторий публичный.
+- Не пушить force в `main`; откат — через `git revert`.
+- Не подключать аналитику, трекеры и внешние шрифты без отдельного решения.
