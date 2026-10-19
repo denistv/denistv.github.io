@@ -1,6 +1,6 @@
 ---
 title: "Контакты"
-description: "Telegram, GitHub, LinkedIn и RunGPT."
+description: "Как связаться с Денисом Твердохлебовым: Telegram, GitHub, LinkedIn и RunGPT. Go, архитектура сервисов, AI-инфраструктура и платформенные команды."
 weight: 10
 ---
 

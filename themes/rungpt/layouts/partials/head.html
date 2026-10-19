@@ -4,11 +4,120 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>{{ if or .IsHome (eq .Title site.Title) }}{{ site.Title }}{{ else }}{{ .Title }} — {{ site.Title }}{{ end }}</title>
-  <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ site.Params.description }}{{ end }}">
+  {{- $role := site.Params.role | default "Go-разработчик" }}
+  {{- $roleShort := site.Params.roleShort | default $role }}
+  {{- $is404 := eq .Kind "404" }}
+
+  {{- $title := "" }}
+  {{- if $is404 }}
+    {{- $title = printf "Страница не найдена — %s" site.Title }}
+  {{- else if .IsHome }}
+    {{- $title = printf "%s — %s" site.Title $role }}
+  {{- else }}
+    {{- $title = printf "%s — %s, %s" .Title site.Title $roleShort }}
+  {{- end }}
+
+  {{- $description := .Description | default site.Params.description }}
+  {{- $ogImage := (site.Params.ogImage | default "og.png") | absURL }}
+  {{- $ogImageAlt := printf "%s — %s" site.Title $role }}
+
+  <title>{{ $title }}</title>
+  <meta name="description" content="{{ $description }}">
+  <meta name="author" content="{{ site.Params.author }}">
+  <meta name="robots" content="{{ if $is404 }}noindex, follow{{ else }}index, follow, max-image-preview:large{{ end }}">
   <link rel="canonical" href="{{ .Permalink }}">
 
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:site_name" content="{{ site.Title }}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ $title }}">
+  <meta property="og:description" content="{{ $description }}">
+  <meta property="og:url" content="{{ .Permalink }}">
+  <meta property="og:image" content="{{ $ogImage }}">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="{{ $ogImageAlt }}">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ $title }}">
+  <meta name="twitter:description" content="{{ $description }}">
+  <meta name="twitter:image" content="{{ $ogImage }}">
+  <meta name="twitter:image:alt" content="{{ $ogImageAlt }}">
+
+  {{- /* Структурированные данные: Person на всех страницах, ProfilePage на главной,
+         WebPage + BreadcrumbList на внутренних. */ -}}
+  {{- $base := site.BaseURL }}
+  {{- $personID := printf "%s#person" $base }}
+  {{- $websiteID := printf "%s#website" $base }}
+  {{- $sameAs := slice }}
+  {{- range site.Params.social }}
+    {{- $sameAs = $sameAs | append .url }}
+  {{- end }}
+
+  {{- $person := dict
+    "@type" "Person"
+    "@id" $personID
+    "name" site.Params.author
+    "url" $base
+    "image" $ogImage
+    "jobTitle" $role
+    "description" site.Params.description
+    "sameAs" $sameAs
+    "knowsLanguage" (slice "ru" "en")
+    "knowsAbout" (slice "Go" "AI-инфраструктура" "LLM" "AI-агенты" "Kubernetes" "PostgreSQL" "Kafka" "CI/CD" "Платформенная инженерия")
+  }}
+
+  {{- $website := dict
+    "@type" "WebSite"
+    "@id" $websiteID
+    "url" $base
+    "name" site.Title
+    "inLanguage" "ru-RU"
+    "publisher" (dict "@id" $personID)
+  }}
+
+  {{- $graph := slice $website $person }}
+  {{- if .IsHome }}
+    {{- $profile := dict
+      "@type" "ProfilePage"
+      "@id" (printf "%s#profilepage" $base)
+      "url" $base
+      "name" $title
+      "description" $description
+      "inLanguage" "ru-RU"
+      "isPartOf" (dict "@id" $websiteID)
+      "mainEntity" (dict "@id" $personID)
+    }}
+    {{- $graph = slice $profile $website $person }}
+  {{- else }}
+    {{- $webpage := dict
+      "@type" "WebPage"
+      "@id" (printf "%s#webpage" .Permalink)
+      "url" .Permalink
+      "name" $title
+      "description" $description
+      "inLanguage" "ru-RU"
+      "isPartOf" (dict "@id" $websiteID)
+      "about" (dict "@id" $personID)
+    }}
+    {{- $breadcrumb := dict
+      "@type" "BreadcrumbList"
+      "@id" (printf "%s#breadcrumb" .Permalink)
+      "itemListElement" (slice
+        (dict "@type" "ListItem" "position" 1 "name" "Главная" "item" $base)
+        (dict "@type" "ListItem" "position" 2 "name" .Title "item" .Permalink)
+      )
+    }}
+    {{- $graph = slice $webpage $breadcrumb $website $person }}
+  {{- end }}
+
+  {{- $schema := dict "@context" "https://schema.org" "@graph" $graph }}
+  <script type="application/ld+json">{{ $schema | jsonify | safeJS }}</script>
+
   <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f1f5f9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
   <link rel="preload" href="{{ "fonts/plus-jakarta-sans-latin.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
 

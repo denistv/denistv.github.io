@@ -1,0 +1,7 @@
+{{ define "main" }}
+  <article class="page-body prose">
+    <h1>Страница не найдена</h1>
+    <p class="page-lead">Такой страницы на сайте нет — возможно, ссылка устарела или в адресе опечатка.</p>
+    <p>Посмотрите <a href="{{ site.Home.RelPermalink }}">главную</a>, <a href="{{ "/cv/" | relURL }}">CV</a>, <a href="{{ "/projects/" | relURL }}">проекты</a> или <a href="{{ "/contacts/" | relURL }}">контакты</a>.</p>
+  </article>
+{{ end }}

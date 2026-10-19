@@ -5,7 +5,8 @@ title = "Денис Твердохлебов"
 locale = "ru-RU"
 defaultContentLanguage = "ru"
 enableRobotsTXT = true
-disableKinds = ["taxonomy", "term", "RSS", "sitemap"]
+enableGitInfo = true
+disableKinds = ["taxonomy", "term", "RSS"]
 
 # Своя тема: layouts, стили и шрифты живут в themes/rungpt.
 theme = "rungpt"
@@ -15,6 +16,13 @@ theme = "rungpt"
   brand = "denistv.com"
   description = "Go-разработчик и технический лидер: AI-инфраструктура, агенты, платформенные команды"
   copyright = "denistv"
+  # Роль для title, OG и структурированных данных.
+  role = "Go-разработчик и технический лидер"
+  roleShort = "Go-разработчик"
+  # Обложка для соцсетей: 1200×630, лежит в static/.
+  ogImage = "og.png"
+  # Основной контакт: используется в шапке и на главной.
+  telegram = "https://t.me/denistv777"
 
 [[params.social]]
   name = "Telegram"
@@ -37,3 +45,7 @@ theme = "rungpt"
     startLevel = 2
     endLevel = 3
     ordered = false
+
+# lastmod для sitemap: дата последнего коммита, который трогал файл.
+[frontmatter]
+  lastmod = [":git", "lastmod", "date"]
