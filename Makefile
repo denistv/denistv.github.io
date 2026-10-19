@@ -21,6 +21,13 @@ help: ## Список команд
 
 dev: ## Локальный сервер с черновиками и live reload
 	@command -v $(HUGO) >/dev/null || { printf "Hugo не найден. Установите: brew install hugo\n"; exit 1; }
+	@if command -v lsof >/dev/null && lsof -nP -iTCP:$(PORT) -sTCP:LISTEN >/dev/null 2>&1; then \
+		printf "\n  Порт %s уже занят:\n" "$(PORT)"; \
+		lsof -nP -iTCP:$(PORT) -sTCP:LISTEN | awk 'NR > 1 {printf "    PID %s — %s\n", $$2, $$1}'; \
+		printf "  Остановить: kill <PID>\n"; \
+		printf "  Или другой порт: make dev PORT=%s\n\n" "$$(( $(PORT) + 1 ))"; \
+		exit 1; \
+	fi
 	@printf "\n  Dev-сервер: http://localhost:%s\n  Остановить: Ctrl+C\n\n" "$(PORT)"
 	$(HUGO) server --buildDrafts --buildFuture --navigateToChanged \
 		--bind $(BIND) --port $(PORT) $(HUGO_FLAGS)
