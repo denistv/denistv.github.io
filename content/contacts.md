@@ -1,6 +1,5 @@
 ---
 title: "Контакты"
-subtitle: "Денис Твердохлебов"
 description: "Telegram, GitHub, LinkedIn и RunGPT."
 weight: 10
 ---

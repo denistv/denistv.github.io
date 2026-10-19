@@ -1,6 +1,5 @@
 ---
 title: "Проекты"
-subtitle: "Денис Твердохлебов"
 description: "RunGPT — шлюз к LLM-моделям и среда для AI-агентов."
 weight: 8
 ---

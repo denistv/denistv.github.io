@@ -1,6 +1,6 @@
 ---
 title: "CV"
-subtitle: "Денис Твердохлебов"
+subtitle: "Software Engineer / Lead"
 description: "Go-разработчик и технический лидер: AI-инфраструктура, агенты, платформенные команды."
 weight: 5
 ---
