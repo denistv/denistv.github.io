@@ -21,18 +21,27 @@ hugo version   # ожидаемо: hugo v0.168.0+extended
 ## Быстрый старт
 
 ```bash
-hugo server -D            # http://localhost:1313, включая черновики
-hugo server               # без черновиков, как на проде
-hugo --minify --gc        # разовая сборка в public/
+make dev                  # http://localhost:1313, черновики и live reload
+make build                # разовая сборка в public/, как в CI
+make check                # сборка + проверка sitemap, robots, 404, OG и JSON-LD
+make                      # справка по командам
 ```
 
-`hugo server` пересобирает страницу при сохранении файлов. Если правка не видна —
-проверьте, что сервер запущен из корня репозитория.
+`make dev` пересобирает страницу при сохранении файлов и после перезагрузки
+открывает изменённую страницу. Порт можно переопределить: `make dev PORT=1414`.
+
+Без make те же команды выглядят так:
+
+```bash
+hugo server -D
+hugo --minify --gc
+```
 
 ## Структура
 
 ```
 hugo.toml                          конфигурация: baseURL, язык, меню, TOC
+Makefile                           короткие команды: dev, build, check, clean
 content/_index.md                  главная
 content/cv.md                      страница CV
 themes/rungpt/layouts/             шаблоны темы: baseof, главная, single
@@ -115,11 +124,14 @@ content/about.md   →  /about/
 ## Сборка
 
 ```bash
-hugo --minify --gc
+make build        # то же, что hugo --minify --gc
 ```
 
 - `--minify` — минификация HTML/CSS/JS;
 - `--gc` — очистка неиспользуемого кеша ресурсов.
+
+`make check` собирает сайт и дополнительно проверяет, что в `public/` попали
+sitemap, robots.txt, страница 404, OG-обложка и JSON-LD на всех страницах.
 
 Результат — в `public/`. Каталог в `.gitignore` и **не коммитится**: артефакт
 создаёт CI.
