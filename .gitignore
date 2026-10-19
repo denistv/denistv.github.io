@@ -4,6 +4,7 @@ AGENTS.MD
 public/
 resources/_gen/
 .hugo_build.lock
+.hugo-cache/
 
 # macOS
 .DS_Store

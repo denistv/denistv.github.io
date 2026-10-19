@@ -1,0 +1,11 @@
+{{ define "main" }}
+  <section class="hero">
+    <p class="hero__eyebrow">{{ with .Params.eyebrow }}{{ . }}{{ else }}Персональная страница{{ end }}</p>
+    <h1 class="hero__title">{{ .Title }}</h1>
+    {{ with .Description }}<p class="hero__lead">{{ . }}</p>{{ end }}
+  </section>
+
+  <section class="card prose">
+    {{ .Content }}
+  </section>
+{{ end }}

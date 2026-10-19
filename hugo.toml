@@ -1,14 +1,19 @@
 # Конфигурация сайта. baseURL менять только вместе с настройками GitHub Pages:
 # от него зависят абсолютные ссылки, canonical и sitemap.
 baseURL = "https://denistv.com/"
-title = "Hello world"
+title = "Денис Твердохлебов"
 locale = "ru-RU"
 defaultContentLanguage = "ru"
 enableRobotsTXT = true
 disableKinds = ["taxonomy", "term", "RSS", "sitemap"]
 
+# Своя тема: layouts, стили и шрифты живут в themes/rungpt.
+theme = "rungpt"
+
 [params]
-  description = "Страница в разработке"
+  author = "Денис Твердохлебов"
+  description = "Go-разработчик и технический лидер: AI-инфраструктура, агенты, платформенные команды"
+  footerNote = "Статический сайт на Hugo"
 
 [markup.goldmark.renderer]
   # Сырой HTML в Markdown не рендерим: контент должен оставаться чистым.
