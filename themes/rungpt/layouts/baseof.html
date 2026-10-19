@@ -3,10 +3,19 @@
   <a class="skip-link" href="#main">К содержимому</a>
   {{ partial "header.html" . }}
 
-  <main id="main" class="container">
-    {{ block "main" . }}{{ end }}
+  {{ $toc := .TableOfContents }}
+  {{ $hasToc := strings.Contains $toc "<li>" }}
+  <main id="main" class="container container--wide">
+    <div class="site-layout{{ if not $hasToc }} site-layout--no-toc{{ end }}">
+      {{ partial "side-nav.html" . }}
+      {{ block "main" . }}{{ end }}
+      {{ partial "page-toc.html" . }}
+    </div>
   </main>
 
   {{ partial "footer.html" . }}
+
+  {{ $js := resources.Get "js/site.js" | minify | fingerprint }}
+  <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
 </body>
 </html>

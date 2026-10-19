@@ -1,0 +1,26 @@
+{{ $current := . }}
+<aside class="nav-card side-nav" data-side-nav>
+  <p class="nav-card__title side-nav__title">Разделы</p>
+
+  <button class="nav-card__title side-nav__toggle" type="button" data-side-nav-toggle
+          aria-expanded="false" aria-controls="side-nav-list">
+    <span>Разделы</span>
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <nav id="side-nav-list" class="nav-card__nav" aria-label="Разделы сайта">
+    <a class="nav-card__link{{ if .IsHome }} is-active{{ end }}"
+       href="{{ site.Home.RelPermalink }}"
+       {{ if .IsHome }}aria-current="page"{{ end }}>Главная</a>
+
+    {{ range site.RegularPages.ByWeight }}
+      <a class="nav-card__link{{ if eq $current.RelPermalink .RelPermalink }} is-active{{ end }}"
+         href="{{ .RelPermalink }}"
+         {{ if eq $current.RelPermalink .RelPermalink }}aria-current="page"{{ end }}>
+        {{ .LinkTitle }}
+      </a>
+    {{ end }}
+  </nav>
+</aside>

@@ -33,19 +33,20 @@ hugo --minify --gc        # разовая сборка в public/
 
 ```
 hugo.toml                          конфигурация: baseURL, язык, меню, TOC
-content/_index.md                  главная — CV
-content/docs/                      раздел документации
-themes/rungpt/layouts/             шаблоны темы: baseof, главная, single, docs/
+content/_index.md                  главная
+content/cv.md                      страница CV
+themes/rungpt/layouts/             шаблоны темы: baseof, главная, single
 themes/rungpt/assets/css/main.css  токены дизайн-системы и все стили
-themes/rungpt/assets/js/docs.js    мобильное меню и подсветка TOC
+themes/rungpt/assets/js/site.js    мобильное меню и подсветка TOC
 themes/rungpt/static/fonts/        self-hosted Plus Jakarta Sans
 static/favicon.svg                 иконка сайта
 .github/workflows/pages.yml        сборка и деплой на Pages
 CNAME                              домен для Pages
 ```
 
-Важно: `static/css/style.css` попадает на сайт как `/css/style.css`. Файлы из
-корня репозитория (кроме `static/`) на сайт не копируются.
+Важно: содержимое `static/` (например `static/favicon.svg`) публикуется в корень
+сайта. Файлы из корня репозитория на сайт не копируются — стили и шаблоны живут
+в `themes/rungpt/`.
 
 ## Контент
 

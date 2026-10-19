@@ -1,0 +1,10 @@
+{{ with .TableOfContents }}
+  {{ if strings.Contains . "<li>" }}
+    <aside class="nav-card page-toc" aria-label="На этой странице">
+      <p class="nav-card__title">На этой странице</p>
+      <div class="nav-card__nav">
+        {{ . }}
+      </div>
+    </aside>
+  {{ end }}
+{{ end }}

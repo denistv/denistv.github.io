@@ -1,6 +1,13 @@
 <footer class="site-footer">
   <div class="container site-footer__inner">
-    <p class="site-footer__copy">© {{ now.Year }}{{ with site.Params.author }} {{ . }}{{ end }}</p>
-    {{ with site.Params.footerNote }}<p class="site-footer__note">{{ . }}</p>{{ end }}
+    <p class="site-footer__copy">© {{ site.Params.copyright | default "denistv" }}</p>
+
+    {{ with site.Params.social }}
+      <nav class="site-footer__links" aria-label="Контакты">
+        {{ range . }}
+          <a href="{{ .url }}" rel="me">{{ .name }}</a>
+        {{ end }}
+      </nav>
+    {{ end }}
   </div>
 </footer>
