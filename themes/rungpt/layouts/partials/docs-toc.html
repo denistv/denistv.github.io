@@ -1,0 +1,8 @@
+{{ with .TableOfContents }}
+  <aside class="docs-toc" aria-label="На этой странице">
+    <p class="docs-toc__title">На этой странице</p>
+    <div class="docs-toc__body">
+      {{ . }}
+    </div>
+  </aside>
+{{ end }}

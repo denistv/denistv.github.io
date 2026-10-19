@@ -1,0 +1,13 @@
+{{ define "main" }}
+  <div class="docs-layout">
+    {{ partial "docs-nav.html" . }}
+
+    <article class="docs-main prose">
+      <p class="docs-kicker">{{ with .CurrentSection }}{{ .Title }}{{ end }}</p>
+      <h1>{{ .Title }}</h1>
+      {{ .Content }}
+    </article>
+
+    {{ partial "docs-toc.html" . }}
+  </div>
+{{ end }}

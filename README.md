@@ -32,17 +32,16 @@ hugo --minify --gc        # разовая сборка в public/
 ## Структура
 
 ```
-hugo.toml                      конфигурация: baseURL, язык, параметры сайта
-content/_index.md              главная страница
-content/*.md                   остальные страницы
-layouts/baseof.html            каркас HTML: head, шапка, main, футер
-layouts/index.html             шаблон главной
-layouts/_default/single.html   шаблон обычной страницы
-static/css/style.css           стили: тёмная тема, мобильная вёрстка, print
-static/favicon.svg             иконка сайта
-static/                        всё отсюда публикуется в корень сайта
-.github/workflows/pages.yml    сборка и деплой на Pages
-CNAME                          домен для Pages
+hugo.toml                          конфигурация: baseURL, язык, меню, TOC
+content/_index.md                  главная — CV
+content/docs/                      раздел документации
+themes/rungpt/layouts/             шаблоны темы: baseof, главная, single, docs/
+themes/rungpt/assets/css/main.css  токены дизайн-системы и все стили
+themes/rungpt/assets/js/docs.js    мобильное меню и подсветка TOC
+themes/rungpt/static/fonts/        self-hosted Plus Jakarta Sans
+static/favicon.svg                 иконка сайта
+.github/workflows/pages.yml        сборка и деплой на Pages
+CNAME                              домен для Pages
 ```
 
 Важно: `static/css/style.css` попадает на сайт как `/css/style.css`. Файлы из

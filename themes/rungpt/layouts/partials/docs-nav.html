@@ -1,0 +1,36 @@
+{{ $current := . }}
+{{ $docs := site.GetPage "/docs" }}
+<aside class="docs-nav" data-docs-nav>
+  <button class="docs-nav__toggle" type="button" data-docs-nav-toggle aria-expanded="false" aria-controls="docs-nav-list">
+    <span>Навигация</span>
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <nav id="docs-nav-list" class="docs-nav__list" aria-label="Документация">
+    {{ $isDocsHome := eq $current.RelPermalink $docs.RelPermalink }}
+    <a class="docs-nav__link{{ if $isDocsHome }} is-active{{ end }}"
+       href="{{ $docs.RelPermalink }}"
+       {{ if $isDocsHome }}aria-current="page"{{ end }}>Обзор</a>
+
+    {{ range $docs.Pages.ByWeight }}
+      {{ $isActive := or (eq $current.RelPermalink .RelPermalink) ($current.IsDescendant .) }}
+      <a class="docs-nav__link{{ if $isActive }} is-active{{ end }}"
+         href="{{ .RelPermalink }}"
+         {{ if eq $current.RelPermalink .RelPermalink }}aria-current="page"{{ end }}>
+        {{ .Title }}
+      </a>
+
+      {{ if .IsSection }}
+        {{ range .Pages.ByWeight }}
+          <a class="docs-nav__link docs-nav__link--nested{{ if eq $current.RelPermalink .RelPermalink }} is-active{{ end }}"
+             href="{{ .RelPermalink }}"
+             {{ if eq $current.RelPermalink .RelPermalink }}aria-current="page"{{ end }}>
+            {{ .Title }}
+          </a>
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  </nav>
+</aside>

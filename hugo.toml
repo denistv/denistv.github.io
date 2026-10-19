@@ -15,6 +15,23 @@ theme = "rungpt"
   description = "Go-разработчик и технический лидер: AI-инфраструктура, агенты, платформенные команды"
   footerNote = "Статический сайт на Hugo"
 
-[markup.goldmark.renderer]
-  # Сырой HTML в Markdown не рендерим: контент должен оставаться чистым.
-  unsafe = false
+# Навигация в шапке.
+[[menu.main]]
+  name = "CV"
+  url = "/"
+  weight = 10
+
+[[menu.main]]
+  name = "Документация"
+  url = "/docs/"
+  weight = 20
+
+[markup]
+  [markup.goldmark.renderer]
+    # Сырой HTML в Markdown не рендерим: контент должен оставаться чистым.
+    unsafe = false
+
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+    ordered = false
