@@ -42,7 +42,7 @@
 | `--footer-text` | `#94a3b8` | `#94a3b8` | текст подвала |
 | `--footer-border` | `#1e293b` | `#1e293b` | граница подвала |
 | `--footer-link-hover` | `#e2e8f0` | `#e2e8f0` | hover контактов в подвале |
-| `--bg-gradient` | slate 600→400 | slate 700→500 | кнопка «Написать» |
+| `--bg-gradient` | slate 700→500 | slate 700→500 | кнопки «Написать», «Смотреть CV» |
 
 Блоки кода не следуют теме: фон `#1e293b`, текст `#e2e8f0` в обеих темах.
 
@@ -148,7 +148,8 @@ H1 страницы — `clamp(1.75rem, 1.35rem + 1.2vw, 2.35rem)`, подзаг
 |---|---|---|
 | Каркас | `.site-layout`, `.site-layout--no-toc` | `baseof.html` |
 | Шапка | `.site-header`, `.site-header__inner`, `.brand`, `.site-actions` | `header.html` |
-| Кнопки | `.button`, `.button--primary`, `.icon-button`, `.theme-toggle` | шапка |
+| Кнопки | `.button`, `.button--primary`, `.button--secondary`, `.icon-button`, `.theme-toggle` | шапка, главная |
+| Действия главной | `.page-actions` | `layouts/index.html` |
 | Панель | `.nav-card`, `.nav-card__title`, `.nav-card__nav` | обе панели |
 | Пункт панели | `.nav-card__link`, `.is-active` | навигация |
 | Левая панель | `.side-nav`, `.side-nav__title`, `.side-nav__toggle` | `side-nav.html` |
@@ -208,6 +209,10 @@ H1 страницы — `clamp(1.75rem, 1.35rem + 1.2vw, 2.35rem)`, подзаг
 5. Проверять четыре режима: светлая тема, тёмная тема, мобильная ширина, печать.
 6. Неиспользуемые компоненты удалять, а не оставлять «на будущее».
 7. Вертикальный зазор под шапкой равен горизонтальному `gap` сетки (`--space-8`).
+8. Кнопки внутри `.prose` не наследуют цвет ссылок: у `.button--primary` и
+   `.button--secondary` он задан явно.
+9. Правая панель рендерится только при наличии H2/H3 — пустое оглавление не
+   выводится.
 
 ## Почему не Tailwind
 

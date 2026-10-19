@@ -9,7 +9,7 @@
     <div class="site-layout{{ if not $hasToc }} site-layout--no-toc{{ end }}">
       {{ partial "side-nav.html" . }}
       {{ block "main" . }}{{ end }}
-      {{ partial "page-toc.html" . }}
+      {{ if $hasToc }}{{ partial "page-toc.html" . }}{{ end }}
     </div>
   </main>
 
