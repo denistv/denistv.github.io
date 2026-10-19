@@ -701,6 +701,7 @@ body {
 }
 
 .nav-card__nav ul ul {
+  margin-top: var(--space-1);
   padding-left: var(--space-3);
 }
 
