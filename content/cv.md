@@ -1,7 +1,6 @@
 ---
 title: "CV"
 subtitle: "Software Engineer / Lead"
-description: "CV Дениса Твердохлебова: Go с 2018 года, AI-инфраструктура, агенты и оркестрация, платформенные команды. Опыт в Quadcode, Тинькофф Инвестициях и IQ Option."
 weight: 5
 ---
 
